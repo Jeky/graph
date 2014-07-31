@@ -1,7 +1,6 @@
 #include "analyse.h"
 #include <math.h>
 
-
 BOOL canFinish(double *pre, double *rank, int length){
     int i;
     for(i = 0; i < length; i++){
@@ -97,11 +96,4 @@ PRNode *computePageRank(Graph *graph, double jumpProb){
     printf("Finish Sorting.\n");
 
     return prnodes;
-}
-
-void printPageRank(PRNode *prnodes, int count, FILE *output){
-    int i;
-    for(i = 0; i < count; i++){
-        fprintf(output, "%d\t%0.10lf\n", prnodes[i].index, prnodes[i].pr);
-    }
 }

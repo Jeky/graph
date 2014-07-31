@@ -1,13 +1,10 @@
 CC=clang
 CFLAGS=-c -Wall
 
-all: pagerank
+all: graphlib.so
 
-pagerank: graph.o utils.o analyse.o pagerank.o
-	$(CC) graph.o utils.o analyse.o pagerank.o -o pagerank
-
-pagerank.o: pagerank.c
-	$(CC) $(CFLAGS) pagerank.c
+graphlib.so: graph.o utils.o analyse.o
+	$(CC) -shared -fPIC graph.o utils.o analyse.o -o graphlib.so
 
 graph.o: graph.c
 	$(CC) $(CFLAGS) graph.c
@@ -19,4 +16,4 @@ analyse.o: analyse.c
 	$(CC) $(CFLAGS) analyse.c
 
 clean:
-	rm *.o pagerank	
+	rm *.o *.so

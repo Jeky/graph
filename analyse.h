@@ -13,6 +13,4 @@ typedef struct _prnode{
 
 PRNode *computePageRank(Graph *graph, double jumpProb);
 
-void printPageRank(PRNode *prnodes, int count, FILE *output);
-
 #endif
