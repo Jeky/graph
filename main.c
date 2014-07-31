@@ -2,7 +2,10 @@
 #include <stdio.h>
 
 int main(int argc, char const *argv[]){
-    Graph *g = loadGraph(argv[1]);
+    const char *filename = argv[1];
+    int nodeCount = atoi(argv[2]);
+
+    Graph *g = loadGraph(filename, nodeCount);
 
     destroyGraph(g);
     return 0;

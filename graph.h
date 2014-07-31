@@ -3,8 +3,6 @@
 
 #include "utils.h"
 
-#define DEFAULT_ARRAY_SIZE 128
-
 typedef struct _node{
     int outlinkCount;
     Array *preNodes;
@@ -37,7 +35,7 @@ void destroyGraph(Graph *graph);
 
 void addNode(Graph *graph, Node *node);
 
-Graph *loadGraph(const char *filename);
+Graph *loadGraph(const char *filename, int nodeCount);
 
 
 

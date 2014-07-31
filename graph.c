@@ -3,6 +3,8 @@
 Node *createNode(){
     Node *node = NEW(Node);
 
+    CHECK_CONDITION(node != NULL, "Memory Allocation of Node Failed!");
+
     node->outlinkCount = 0;
     node->preNodes = createArray();
 
@@ -18,11 +20,15 @@ void destroyNode(Node *node){
 Graph *createGraph(){
     Graph *graph = NEW(Graph);
 
+    CHECK_CONDITION(graph != NULL, "Memory Allocation of Graph Failed!");
+
     graph->nodes = NEW_ARRAY(Node*, DEFAULT_ARRAY_SIZE);
     graph->deadends = createArray();
     graph->nodeCount = 0;
     graph->edgeCount = 0;
     graph->capacity = 0;
+
+    CHECK_CONDITION(graph->nodes != NULL, "Memory Allocation of Graph Failed!");
 
     return graph;
 }
@@ -62,21 +68,31 @@ void addNode(Graph *graph, Node *node){
     graph->nodes[graph->nodeCount++] = node;
 }
 
-Graph *loadGraph(const char *filename){
-    Graph *graph = createGraph();
+Graph *loadGraph(const char *filename, int nodeCount){
+    Graph *graph = NEW(Graph);
     Node *n;
-    int fromId, toId;
+    int fromId, toId, i;
 
-    FILE *fp = fopen(filename, "r");
+    FILE *fp;
+
+    graph->nodes = NEW_ARRAY(Node*, nodeCount);
+    graph->deadends = createArray();
+    graph->nodeCount = nodeCount;
+    graph->edgeCount = 0;
+    graph->capacity = nodeCount;
+
+    for(i = 0; i < graph->nodeCount; i++){
+        graph->nodes[i] = createNode();
+    }
+
+    fp = fopen(filename, "r");
     CHECK_CONDITION(fp != NULL, "Cannot Open Graph File!");
 
     while(!feof(fp)){
         fscanf(fp, "%d\t%d", &fromId, &toId);
-        printf("%d\t%d\n", fromId, toId);
-        // TODO: construct graph
-        while(graph->capacity < fromId){
-            
-        }
+        
+        arrayAdd(graph->nodes[toId]->preNodes, fromId);
+        graph->nodes[fromId]->outlinkCount++;
     }
 
     return graph;

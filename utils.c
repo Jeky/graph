@@ -4,9 +4,13 @@
 Array *createArray(){
     Array *array = NEW(Array);
 
+    CHECK_CONDITION(array != NULL, "Memory Allocation of Array Failed!");
+
     array->length = 0;
     array->values = NEW_ARRAY(int, DEFAULT_ARRAY_SIZE);
     array->capacity = DEFAULT_ARRAY_SIZE;
+
+    CHECK_CONDITION(array->values != NULL, "Memory Allocation of Array Failed!");
 
     return array;
 }
@@ -22,6 +26,7 @@ void encapsulateArray(Array *array){
 
     array->capacity *= 2;
     array->values = NEW_ARRAY(int, array->capacity);
+    CHECK_CONDITION(array->values != NULL, "Memory Allocation of Array Failed!");
 
     for(i = 0; i < array->length; i++){
         array->values[i] = tmp[i];
