@@ -5,34 +5,19 @@
 
 #define DEFAULT_ARRAY_SIZE 128
 
-typedef struct _array{
-	int length;
-	int *values;
-	int capacity;
-} Array;
-
 typedef struct _node{
-	int outlinkCount;
-	Array *preNodes;
+    int outlinkCount;
+    Array *preNodes;
 } Node;
 
 typedef struct _graph{
-	Node **nodes;
-	Array *deadends;
+    Node **nodes;
+    Array *deadends;
 
-	int capacity;
-	int nodeCount;
-	int edgeCount;
+    int capacity;
+    int nodeCount;
+    int edgeCount;
 } Graph;
-
-/**
- * Array functions
- */
-Array *createArray();
-
-void destroyArray(Array *array);
-
-void arrayAdd(Array *array, int val);
 
 
 /**
@@ -51,6 +36,8 @@ Graph *createGraph();
 void destroyGraph(Graph *graph);
 
 void addNode(Graph *graph, Node *node);
+
+Graph *loadGraph(const char *filename);
 
 
 

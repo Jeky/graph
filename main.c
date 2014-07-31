@@ -2,5 +2,8 @@
 #include <stdio.h>
 
 int main(int argc, char const *argv[]){
-	return 0;
+    Graph *g = loadGraph(argv[1]);
+
+    destroyGraph(g);
+    return 0;
 }

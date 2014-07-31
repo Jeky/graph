@@ -9,4 +9,21 @@
 #define NEW(type) (type*)malloc(sizeof(type))
 #define NEW_ARRAY(type, size) (type*)malloc(sizeof(type) * size)
 
+#define CHECK_CONDITION(condition, message) assert(condition && message);
+
+typedef struct _array{
+    int length;
+    int *values;
+    int capacity;
+} Array;
+
+/**
+ * Array functions
+ */
+Array *createArray();
+
+void destroyArray(Array *array);
+
+void arrayAdd(Array *array, int val);
+
 #endif
