@@ -2,3 +2,4 @@ main
 pagerank
 .DS_Store
 test/*
+*.o
