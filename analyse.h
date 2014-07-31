@@ -11,6 +11,11 @@ typedef struct _prnode{
     double pr;
 }PRNode;
 
+typedef struct _degnode{
+	int inDeg;
+	int outDeg;
+}DegNode;
+
 PRNode *computePageRank(Graph *graph, double jumpProb);
 
 #endif

@@ -3,6 +3,8 @@ import os.path
 import os
 
 GRAPH_LIBRARY_NAME = 'graphlib.so'
+SORT_BY_IN  = lambda x: -x['in']
+SORT_BY_OUT = lambda x: -x['out']
 
 class Array(Structure):
     _fields_ = [('length', c_int),
@@ -78,8 +80,36 @@ def printPageRank(prnodes, outputFile):
 
     output.close()
 
+
+def countDegree(graph):
+    nodes = []
+
+    for i in range(graph.nodeCount):
+        nodes.append({'index': i, 
+                      'in'   : graph.nodes[i].contents.preNodes.contents.length,
+                      'out'  : graph.nodes[i].contents.outlinkCount})
+
+    return nodes
+
+
+def sortDeg(nodes, comparator):
+    nodes.sort(key = comparator)
+
+
+def printDeg(degNodes, outputFile):
+    output = open(outputFile, 'w')
+
+    for degn in degNodes:
+        output.write('%d\t%d\t%d\n' % (degn['index'], degn['in'], degn['out']))
+
+    output.close()
+
+
 if __name__ == '__main__':
     g = loadGraph('/Users/jeky/dataset/samples/Amazon0505WCC.dat', 410236)
-    prnodes = computePageRank(g)
-    printPageRank(prnodes, 'test/Amazon0505WCC-pagerank-0.2.list')    
+    #prnodes = computePageRank(g)
+    #printPageRank(prnodes, 'test/Amazon0505WCC-pagerank-0.2.list')  
+    deg = countDegree(g)
+    sortDeg(deg, SORT_BY_IN)
+    print deg[:10]
     destroyGraph(g)
