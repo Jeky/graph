@@ -14,7 +14,7 @@ def compress(inputFilename, outputFilename, mapFilename):
         if i != 0 and i % PRINT_STEP_COUNT == 0:
             print 'read', i, 'lines'
 
-        fromId, toId = l.strip.split('\t')
+        fromId, toId = l.strip().split('\t')
         nodeSet.add(int(fromId))
         nodeSet.add(int(toId))
         lineCount += 1
@@ -39,7 +39,7 @@ def compress(inputFilename, outputFilename, mapFilename):
         if i != 0 and i % PRINT_STEP_COUNT == 0:
             print 'write', i, 'lines'
 
-        fromId, toId = l.strip.split('\t')
+        fromId, toId = l.strip().split('\t')
         nodeSet.add(int(fromId))
         nodeSet.add(int(toId))
 
