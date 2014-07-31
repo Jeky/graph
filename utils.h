@@ -5,6 +5,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <time.h>
 
 #define NEW(type) (type*)malloc(sizeof(type));
 #define NEW_ARRAY(type, size) (type*)malloc(sizeof(type) * size)

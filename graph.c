@@ -72,9 +72,10 @@ Graph *loadGraph(const char *filename, int nodeCount){
     Graph *graph = NEW(Graph);
     Node *n;
     int fromId, toId, i;
-
+    clock_t begin, end;
     FILE *fp;
 
+    begin = clock();
     graph->nodes = NEW_ARRAY(Node*, nodeCount);
     graph->deadends = createArray();
     graph->nodeCount = nodeCount;
@@ -93,7 +94,23 @@ Graph *loadGraph(const char *filename, int nodeCount){
         
         arrayAdd(graph->nodes[toId]->preNodes, fromId);
         graph->nodes[fromId]->outlinkCount++;
+        graph->edgeCount ++;
+        if(graph->edgeCount % 1000000 == 0){
+            printf("read %d lines\n", graph->edgeCount);
+        }
     }
+
+    // TODO: check dead ends
+
+    for(i = 0; i < graph->nodeCount; i++){
+        if(graph->nodes[i]->outlinkCount == 0){
+            arrayAdd(graph->deadends, i);
+        }
+    }
+
+    end = clock();
+    printf("Finish Loading Graph[V = %d, E = %d]. Total Time: %0.2lf\n", 
+            graph->nodeCount, graph->edgeCount, (double)(end - begin) / CLOCKS_PER_SEC);
 
     return graph;
 }

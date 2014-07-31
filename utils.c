@@ -24,7 +24,7 @@ void encapsulateArray(Array *array){
     int *tmp = array->values;
     int i = 0;
 
-    array->capacity *= 2;
+    array->capacity += DEFAULT_ARRAY_SIZE;
     array->values = NEW_ARRAY(int, array->capacity);
     CHECK_CONDITION(array->values != NULL, "Memory Allocation of Array Failed!");
 
