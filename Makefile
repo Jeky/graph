@@ -1,17 +1,22 @@
 CC=clang
 CFLAGS=-c -Wall
 
-all: main.o graph.o utils.o
-	$(CC) main.o graph.o utils.o -o graphtool
+all: pagerank
 
-main.o: main.c graph.o
-	$(CC) $(CFLAGS) main.c
+pagerank: graph.o utils.o analyse.o pagerank.o
+	$(CC) graph.o utils.o analyse.o pagerank.o -o pagerank
 
-graph.o: graph.c utils.o
+pagerank.o: pagerank.c
+	$(CC) $(CFLAGS) pagerank.c
+
+graph.o: graph.c
 	$(CC) $(CFLAGS) graph.c
 
 utils.o: utils.c
 	$(CC) $(CFLAGS) utils.c
 
+analyse.o: analyse.c
+	$(CC) $(CFLAGS) analyse.c
+
 clean:
-	rm *.o graphtool
+	rm *.o pagerank	

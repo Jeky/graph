@@ -78,7 +78,7 @@ Graph *loadGraph(const char *filename, int nodeCount){
 
     graph = createGraphWithNodeCount(nodeCount);
 
-    for(i = 0; i < graph->nodeCount; i++){
+    for(i = 0; i < nodeCount; i++){
         addNode(graph, createNode());
     }
 
@@ -88,6 +88,8 @@ Graph *loadGraph(const char *filename, int nodeCount){
     while(!feof(fp)){
         fscanf(fp, "%d\t%d", &fromId, &toId);
         
+        CHECK_CONDITION(graph->nodes[toId] && graph->nodes[fromId], "Init Graph Error!");
+
         arrayAdd(graph->nodes[toId]->preNodes, fromId);
         graph->nodes[fromId]->outlinkCount++;
         graph->edgeCount ++;
@@ -107,6 +109,7 @@ Graph *loadGraph(const char *filename, int nodeCount){
         }
     }
 
+    fclose(fp);
     end = clock();
     printf("Finish Loading Graph[V = %d, E = %d, D = %d]. Total Time: %0.2lf sec.\n", 
             graph->nodeCount, graph->edgeCount, graph->deadends->length,

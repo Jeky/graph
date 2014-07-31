@@ -1,15 +1,20 @@
 #include "utils.h"
 
 
-Array *createArray(){
+Array *createArrayWithCapacity(int capacity){
     Array *array;
     NEW(array, Array);
 
     array->length = 0;
-    array->capacity = DEFAULT_ARRAY_SIZE;
+    array->capacity = capacity;
     NEW_ARRAY(array->values, int, array->capacity);
 
     return array;
+}
+
+
+Array *createArray(){
+    return createArrayWithCapacity(DEFAULT_ARRAY_SIZE);
 }
 
 void destroyArray(Array *array){
@@ -37,4 +42,10 @@ void arrayAdd(Array *array, int val){
     }
 
     array->values[array->length++] = val;
+}
+
+int arrayGet(Array *array, int index){
+    CHECK_CONDITION(index < array->length, "Index Out of Bound.");
+
+    return array->values[index];
 }

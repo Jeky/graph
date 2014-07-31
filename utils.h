@@ -8,7 +8,6 @@
 #include <time.h>
 
 #define CHECK_CONDITION(condition, message) assert(condition && message);
-
 #define NEW(var, type)  do{\
                             var = (type*)malloc(sizeof(type)); \
                             CHECK_CONDITION(var != NULL, "Memory Allocation Failed!\n");\
@@ -17,6 +16,10 @@
                                         var = (type*)malloc(sizeof(type) * size); \
                                         CHECK_CONDITION(var != NULL, "Memory Allocation Failed!\n");\
                                     }while(0);
+
+#define BOOL char
+#define TRUE 1
+#define FALSE 0
 
 #define DEFAULT_ARRAY_SIZE 128
 
@@ -31,8 +34,12 @@ typedef struct _array{
  */
 Array *createArray();
 
+Array *createArrayWithCapacity(int capacity);
+
 void destroyArray(Array *array);
 
 void arrayAdd(Array *array, int val);
+
+int arrayGet(Array *array, int index);
 
 #endif
