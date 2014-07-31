@@ -1,9 +1,8 @@
 #include "graph.h"
 
 Node *createNode(){
-    Node *node = NEW(Node);
-
-    CHECK_CONDITION(node != NULL, "Memory Allocation of Node Failed!");
+    Node *node;
+    NEW(node, Node);
 
     node->outlinkCount = 0;
     node->preNodes = createArray();
@@ -16,21 +15,21 @@ void destroyNode(Node *node){
     free(node);
 }
 
+Graph *createGraphWithNodeCount(int nodeCount){
+    Graph *graph;
+    NEW(graph, Graph);
 
-Graph *createGraph(){
-    Graph *graph = NEW(Graph);
-
-    CHECK_CONDITION(graph != NULL, "Memory Allocation of Graph Failed!");
-
-    graph->nodes = NEW_ARRAY(Node*, DEFAULT_ARRAY_SIZE);
+    NEW_ARRAY(graph->nodes, Node*, nodeCount);
     graph->deadends = createArray();
     graph->nodeCount = 0;
     graph->edgeCount = 0;
-    graph->capacity = 0;
-
-    CHECK_CONDITION(graph->nodes != NULL, "Memory Allocation of Graph Failed!");
+    graph->capacity = nodeCount;
 
     return graph;
+}
+
+Graph *createGraph(){
+    return createGraphWithNodeCount(DEFAULT_ARRAY_SIZE);
 }
 
 void destroyGraph(Graph *graph){
@@ -50,8 +49,8 @@ void encapsulateGraph(Graph *graph){
     Node **tmp = graph->nodes;
     int i = 0;
 
-    graph->capacity *= 2;
-    graph->nodes = NEW_ARRAY(Node*, graph->capacity);
+    graph->capacity += DEFAULT_ARRAY_SIZE;
+    NEW_ARRAY(graph->nodes, Node*, graph->capacity);
 
     for(i = 0; i < graph->nodeCount; i++){
         graph->nodes[i] = tmp[i];
@@ -69,21 +68,18 @@ void addNode(Graph *graph, Node *node){
 }
 
 Graph *loadGraph(const char *filename, int nodeCount){
-    Graph *graph = NEW(Graph);
-    Node *n;
+    Graph *graph;
     int fromId, toId, i;
     clock_t begin, end;
     FILE *fp;
 
+    printf("Start Loading Graph From File: %s.\n", filename);
     begin = clock();
-    graph->nodes = NEW_ARRAY(Node*, nodeCount);
-    graph->deadends = createArray();
-    graph->nodeCount = nodeCount;
-    graph->edgeCount = 0;
-    graph->capacity = nodeCount;
+
+    graph = createGraphWithNodeCount(nodeCount);
 
     for(i = 0; i < graph->nodeCount; i++){
-        graph->nodes[i] = createNode();
+        addNode(graph, createNode());
     }
 
     fp = fopen(filename, "r");
@@ -95,22 +91,26 @@ Graph *loadGraph(const char *filename, int nodeCount){
         arrayAdd(graph->nodes[toId]->preNodes, fromId);
         graph->nodes[fromId]->outlinkCount++;
         graph->edgeCount ++;
-        if(graph->edgeCount % 1000000 == 0){
+        if(graph->edgeCount % 1000000 == 0 && graph->edgeCount != 0){
             printf("read %d lines\n", graph->edgeCount);
         }
     }
 
-    // TODO: check dead ends
-
+    // check dead ends
+    printf("Checking Deadends...\n");
     for(i = 0; i < graph->nodeCount; i++){
+        if(i % 100000 == 0 && i != 0){
+            printf("Checked %d nodes. Dead Ends Count: %d\n", i, graph->deadends->length);
+        }
         if(graph->nodes[i]->outlinkCount == 0){
             arrayAdd(graph->deadends, i);
         }
     }
 
     end = clock();
-    printf("Finish Loading Graph[V = %d, E = %d]. Total Time: %0.2lf\n", 
-            graph->nodeCount, graph->edgeCount, (double)(end - begin) / CLOCKS_PER_SEC);
+    printf("Finish Loading Graph[V = %d, E = %d, D = %d]. Total Time: %0.2lf sec.\n", 
+            graph->nodeCount, graph->edgeCount, graph->deadends->length,
+            (double)(end - begin) / CLOCKS_PER_SEC);
 
     return graph;
 }

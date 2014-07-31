@@ -31,6 +31,8 @@ void destroyNode(Node *node);
  */
 Graph *createGraph();
 
+Graph *createGraphWithNodeCount(int nodeCount);
+
 void destroyGraph(Graph *graph);
 
 void addNode(Graph *graph, Node *node);

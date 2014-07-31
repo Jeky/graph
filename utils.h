@@ -7,12 +7,18 @@
 #include <stdio.h>
 #include <time.h>
 
-#define NEW(type) (type*)malloc(sizeof(type));
-#define NEW_ARRAY(type, size) (type*)malloc(sizeof(type) * size)
+#define CHECK_CONDITION(condition, message) assert(condition && message);
+
+#define NEW(var, type)  do{\
+                            var = (type*)malloc(sizeof(type)); \
+                            CHECK_CONDITION(var != NULL, "Memory Allocation Failed!\n");\
+                        }while(0);
+#define NEW_ARRAY(var, type, size)  do{\
+                                        var = (type*)malloc(sizeof(type) * size); \
+                                        CHECK_CONDITION(var != NULL, "Memory Allocation Failed!\n");\
+                                    }while(0);
 
 #define DEFAULT_ARRAY_SIZE 128
-
-#define CHECK_CONDITION(condition, message) assert(condition && message);
 
 typedef struct _array{
     int length;
