@@ -11,7 +11,7 @@ def compress(inputFilename, outputFilename, mapFilename):
 
     fin = open(inputFilename)
     for i, l in enumerate(fin.xreadlines()):
-        if i != 0 and i % PRINT_STEP_COUNT == 0:
+        if i != 0 and i % PRINT_LINE == 0:
             print 'read', i, 'lines'
 
         fromId, toId = l.strip().split('\t')
@@ -25,7 +25,7 @@ def compress(inputFilename, outputFilename, mapFilename):
     nodeList = list(nodeSet)
     fmap = open(mapFilename, 'w')
     for i, nid in enumerate(nodeList):
-        if i != 0 and i % PRINT_STEP_COUNT == 0:
+        if i != 0 and i % PRINT_LINE == 0:
             print 'write', i, 'nodes'
 
         fmap.write('%d\n' % nid)
@@ -36,7 +36,7 @@ def compress(inputFilename, outputFilename, mapFilename):
     fin = open(inputFilename)
     fout = open(outputFilename, 'w')
     for i, l in enumerate(fin.xreadlines()):
-        if i != 0 and i % PRINT_STEP_COUNT == 0:
+        if i != 0 and i % PRINT_LINE == 0:
             print 'write', i, 'lines'
 
         fromId, toId = l.strip().split('\t')
