@@ -22,13 +22,14 @@ def compress(inputFilename, outputFilename, mapFilename):
     fin.close()
     print 'Read %s lines. Node Count: %d' % (lineCount, len(nodeSet))
 
-    nodeList = list(nodeSet)
     fmap = open(mapFilename, 'w')
-    for i, nid in enumerate(nodeList):
+    nodeMap = {}
+    for i, nid in enumerate(nodeSet):
         if i != 0 and i % PRINT_LINE == 0:
             print 'write', i, 'nodes'
 
         fmap.write('%d\n' % nid)
+        nodeMap[nid] = i
 
     fmap.close()
     print 'Finish writing map file:', mapFilename
@@ -39,11 +40,8 @@ def compress(inputFilename, outputFilename, mapFilename):
         if i != 0 and i % PRINT_LINE == 0:
             print 'write', i, 'lines'
 
-        fromId, toId = l.strip().split('\t')
-        nodeSet.add(int(fromId))
-        nodeSet.add(int(toId))
-
-        fout.write('%d\t%d\n' % (fromId, toId))
+        fromId, toId = [int(nid) for nid in l.strip().split('\t')]
+        fout.write('%d\t%d\n' % (nodeMap[fromId], nodeMap[toId]))
 
     fin.close()
     fout.close()
@@ -54,11 +52,38 @@ def compress(inputFilename, outputFilename, mapFilename):
 def decompress(inputFilename, outputFilename, mapFilename):
     print 'decompressing', inputFilename, ', using mapfile:', mapFilename
 
+    nodeList = []
+    fmap = open(mapFilename)
+    for i, l in enumerate(fmap.xreadlines()):
+        if i != 0 and i % PRINT_LINE == 0:
+            print 'read', i, 'lines'
+
+        nodeList.append(int(l))
+
+    fmap.close()
+    print 'Finish reading map file:', mapFilename, 'Total node count:', len(nodeList)
+
+    fin = open(inputFilename)
+    fout = open(outputFilename, 'w')
+
+    for i, l in enumerate(fin.xreadlines()):
+        if i != 0 and i % PRINT_LINE == 0:
+            print 'read', i, 'lines'
+
+        nodeIndex, prv = l.strip().split('\t')
+        nodeIndex = int(nodeIndex)
+        fout.write('%d\t%s\n' % (nodeList[nodeIndex], prv))
+
+    fin.close()
+    fout.close()
+    print 'FInish decompressing page rank file. Output: ', outputFilename
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = '''\
         Compress or decompress graph file. 
-        If node ids in graph file are not continuous, compressor should be used.'''.strip())
+        If node ids in graph file are not continuous, compressor should be used.
+        And after pagerank is calculated, using decompressor to get the result.''')
 
     parser.add_argument('-c', dest = 'action', action='store_const', const = compress,\
                         help = 'compress this file')

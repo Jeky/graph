@@ -74,6 +74,9 @@ Graph *loadGraph(const char *filename){
         fscanf(fp, "%d\t%d", &fromId, &toId);
         printf("%d\t%d\n", fromId, toId);
         // TODO: construct graph
+        while(graph->capacity < fromId){
+            
+        }
     }
 
     return graph;
