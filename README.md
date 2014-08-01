@@ -18,7 +18,9 @@ This library is written by C, but it also has a python interface which is strong
 
 * **utils.h & utils.c** - utility tools (include some convenient macros)
 
-* **gat** - python interface and command line interface
+* **gat** - python interface
+
+* **graphtool.py** - command line interface
 
 ##Usage
 
