@@ -1,10 +1,9 @@
 from sets import Set
-import argparse
 
 PRINT_LINE = 1000000
 
-def compress(inputFilename, outputFilename, mapFilename):
-    print 'compressing', inputFilename
+def compress(inputFilename, mapFilename, outputFilename):
+    print 'Compressing', inputFilename
 
     nodeSet = Set()
     lineCount = 0
@@ -49,8 +48,8 @@ def compress(inputFilename, outputFilename, mapFilename):
     print 'Finish compressing graph file. Output:', outputFilename
 
 
-def decompress(inputFilename, outputFilename, mapFilename):
-    print 'decompressing', inputFilename, ', using mapfile:', mapFilename
+def decompress(inputFilename, mapFilename, outputFilename):
+    print 'Decompressing', inputFilename, ', using mapfile:', mapFilename
 
     nodeList = []
     fmap = open(mapFilename)
@@ -70,36 +69,10 @@ def decompress(inputFilename, outputFilename, mapFilename):
         if i != 0 and i % PRINT_LINE == 0:
             print 'read', i, 'lines'
 
-        nodeIndex, prv = l.strip().split('\t')
-        nodeIndex = int(nodeIndex)
-        fout.write('%d\t%s\n' % (nodeList[nodeIndex], prv))
+        info = l.strip().split('\t')
+        nodeIndex = int(info[0])
+        fout.write('%d\t%s\n' % (nodeList[nodeIndex], '\t'.join(info[1:])))
 
     fin.close()
     fout.close()
-    print 'FInish decompressing page rank file. Output: ', outputFilename
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = '''\
-        Compress or decompress graph file. 
-        If node ids in graph file are not continuous, compressor should be used.
-        And after pagerank is calculated, using decompressor to get the result.''')
-
-    parser.add_argument('-c', dest = 'action', action='store_const', const = compress,\
-                        help = 'compress this file')
-    parser.add_argument('-d', dest = 'action', action='store_const', const = decompress,\
-                        help = 'decompress this file')
-    
-    parser.add_argument('INPUT', type = str, \
-                        help = 'input file name')
-    parser.add_argument('OUTPUT', type = str, \
-                        help = 'output file name')
-    parser.add_argument('MAP', type = str, \
-                        help = 'map file name')
-
-    args = parser.parse_args()
-    if not args.action:
-        print 'usage: compress.py [-h] [-c] [-d] INPUT OUTPUT MAP'
-        print 'compress.py: error: should choose -c or -d as an option.'
-    else:
-        args.action(args.INPUT, args.OUTPUT, args.MAP)
+    print 'Finish decompressing page rank file. Output: ', outputFilename
