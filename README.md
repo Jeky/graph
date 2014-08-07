@@ -6,6 +6,8 @@ This library is written by C, but it also has a python interface which is strong
 
 **PageRank Computer** is optimized by changing data structure into adjacency list and changing algorithm of power iteration, so it can compute large graph.
 
+
+
 ##File description
 
 * **graph.h & graph.c** - graph data structure and basic graph load functions
@@ -20,9 +22,13 @@ This library is written by C, but it also has a python interface which is strong
 
 * **graphtool.py** - command line interface
 
+
+
 ##Usage
 
 usage: graphtool.py [-h] {compress,decompress,pagerank,degree}
+
+
 
 ###compress
 
@@ -37,6 +43,8 @@ optional arguments:
 * **-m MAP**      output map file, which will be used when decompressing
 
 * **-o OUTPUT**   compressed graph file. If not indicated, output will be stdout
+
+
 
 ###decompress
 
@@ -54,6 +62,8 @@ optional arguments:
 
 * **-o OUTPUT**             decompressed file. If not indicated, output will be stdout
 
+
+
 ###pagerank
 
 compute pagerank value of input graph
@@ -69,6 +79,8 @@ optional arguments:
 * **-j JP**         jump probability when computing pagerank
 
 * **-n NODECOUNT**  node count of graph
+
+
 
 ###degree
 
@@ -88,7 +100,43 @@ optional arguments:
 
 * **-n NODECOUNT**     node count of graph
 
+
+
+###randnode
+
+usage: graphtool.py randnode [-h] -i INPUT -c COUNT [-o OUTPUT] [-n NODECOUNT]
+
+optional arguments:
+
+* **-i INPUT**     graph file
+
+* **-c COUNT**      sample count
+
+* **-o OUTPUT**     degree file. If not indicated, output will be stdout
+
+* **-n NODECOUNT**  node count of graph
+
+
+
+###randedge
+
+usage: graphtool.py randedge [-h] -i INPUT -c COUNT [-o OUTPUT] [-n EDGECOUNT]
+
+optional arguments:
+
+* **-i INPUT**    graph file
+  
+* **-c COUNT**      sample count
+  
+* **-o OUTPUT**     degree file. If not indicated, output will be stdout
+  
+* **-n EDGECOUNT**  edge count of graph
+
+
+
 ##Update Log
+
+* **Aug 7.**  Add random node, random edge sampling methods.
 
 * **Aug 7.**  Add new CLI, fix bugs and refactor structure of files
 

@@ -1,4 +1,4 @@
-from gat import compressor, analysor, graph
+from gat import compressor, analysor, graph, sample
 import argparse
 import sys
 import os.path
@@ -54,6 +54,30 @@ if __name__ == '__main__':
                               help = 'node count of graph', 
                               type = int, default = 0)
 
+    rnParser = subparsers.add_parser('randnode', help = 'random node sampling')
+    rnParser.add_argument('-i', dest = 'input', required = True,  
+                          help = 'graph file')
+    rnParser.add_argument('-c', dest = 'count', required = True,
+                          help = 'sample count',
+                          type = int)
+    rnParser.add_argument('-o', dest = 'output', required = False, 
+                          help = 'degree file. If not indicated, output will be stdout')
+    rnParser.add_argument('-n', dest = 'nodeCount', required = False, 
+                          help = 'node count of graph', 
+                          type = int, default = 0)
+
+    reParser = subparsers.add_parser('randedge', help = 'random edge sampling')
+    reParser.add_argument('-i', dest = 'input', required = True,  
+                          help = 'graph file')
+    reParser.add_argument('-c', dest = 'count', required = True,
+                          help = 'sample count',
+                          type = int)
+    reParser.add_argument('-o', dest = 'output', required = False, 
+                          help = 'degree file. If not indicated, output will be stdout')
+    reParser.add_argument('-n', dest = 'edgeCount', required = False, 
+                          help = 'edge count of graph', 
+                          type = int, default = 0)
+
     args = parser.parse_args()
 
     if args.action == 'compress':
@@ -77,5 +101,17 @@ if __name__ == '__main__':
 
         degnodes = analysor.countDegree(args.input, args.nodeCount, args.sort)
         analysor.printDegree(degnodes, args.output, args.direct)
+    elif args.action == 'randnode':
+        if args.nodeCount == 0:
+            args.nodeCount = analysor.countNode(args.input)
+
+        nodes = sample.randomNodeSample(args.nodeCount, args.count)
+        sample.printNodes(nodes, args.output)
+    elif args.action == 'randedge':
+        if args.edgeCount == 0:
+            args.edgeCount = sample.countEdge(args.input)
+
+        edges = sample.randomEdgeSample(args.input, args.edgeCount, args.count)
+        sample.printEdges(edges, args.output)
     else:
         parser.print_help()

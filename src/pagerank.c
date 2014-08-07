@@ -43,7 +43,7 @@ void destroyBackwardGraph(BackwardGraph *graph){
 }
 
 
-BOOL backwardGraphLoader(void *g, int fromId, int toId){
+BOOL backwardGraphLoader(void *g, int lineIndex, int fromId, int toId){
     BackwardGraph* graph = (BackwardGraph*)g;
 
     CHECK_CONDITION(graph->nodes[toId] && graph->nodes[fromId], "Init Graph Error!");

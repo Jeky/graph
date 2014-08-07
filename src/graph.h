@@ -5,18 +5,6 @@
 
 #define BUF_SIZE 100
 
-typedef struct _forwardnode{
-	Array *nextNodes;
-} ForwardNode;
-
-typedef struct _forwardgraph{
-	ForwardNode **node;
-
-    int capacity;
-    int nodeCount;
-    int edgeCount;
-} ForwardGraph;
-
-double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int));
+double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int,int));
 
 #endif

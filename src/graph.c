@@ -1,6 +1,6 @@
 #include "graph.h"
 
-double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int)){
+double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int,int)){
     int fromId, toId, lineCounter = 0, count;
     clock_t begin, end;
     FILE *fp;
@@ -16,7 +16,7 @@ double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(vo
             continue;
         }
 
-        if(!lineHandleFun(graph, fromId, toId)){
+        if(!lineHandleFun(graph, lineCounter, fromId, toId)){
             break;
         }
 

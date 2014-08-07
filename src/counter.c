@@ -1,7 +1,7 @@
 #include "counter.h"
 
 
-BOOL nodeCounter(void *graph, int fromId, int toId){
+BOOL nodeCounter(void *graph, int lineIndex, int fromId, int toId){
     int *max = (int*)graph;
     *max = fromId > toId ? fromId : toId;
 
@@ -15,12 +15,12 @@ int countNode(const char *filename){
     printf("Start Counting Nodes in Graph From File: %s.\n", filename);
     totalTime = loadGraphFile(&maxNodeIndex, filename, &nodeCounter);
 
-    printf("Node Count: %d. Total Time: %0.2lf\n", maxNodeIndex + 1, totalTime);
+    printf("Node Count: %d. Total Time: %0.2lf sec.\n", maxNodeIndex + 1, totalTime);
     return maxNodeIndex + 1;
 }
 
 
-BOOL degreeCounter(void *graph, int fromId, int toId){
+BOOL degreeCounter(void *graph, int lineIndex, int fromId, int toId){
     DegNode *nodes = (DegNode*)graph;
     nodes[fromId].outDeg ++;
     nodes[toId].inDeg ++;
@@ -52,7 +52,7 @@ DegNode *countDegree(const char *filename, int nodeCount, int sortBy){
     printf("Start Counting Degree in Graph From File: %s.\n", filename);
     totalTime = loadGraphFile(nodes, filename, &degreeCounter);
 
-    printf("Finish Counting Degree. Total Time: %0.2lf\n", totalTime);
+    printf("Finish Counting Degree. Total Time: %0.2lf sec.\n", totalTime);
     switch(sortBy){
         case SORT_BY_INDEG:
             printf("Sort Degree by Indegree...\n");
@@ -63,5 +63,6 @@ DegNode *countDegree(const char *filename, int nodeCount, int sortBy){
             qsort(nodes, nodeCount, sizeof(DegNode), outdegreeComparator);
             break;
     }   
+
     return nodes;
 }
