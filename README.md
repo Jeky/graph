@@ -90,7 +90,7 @@ optional arguments:
 
 ##Update Log
 
-* **Aug 7. ** Add new CLI, fix bugs and refactor structure of files
+* **Aug 7.**  Add new CLI, fix bugs and refactor structure of files
 
 * **Jul 31.** Update usage, add degree counter and command line interface
 
