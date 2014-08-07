@@ -65,7 +65,7 @@ if __name__ == '__main__':
                           help = 'sample count',
                           type = int)
     rnParser.add_argument('-o', dest = 'output', required = False, 
-                          help = 'degree file. If not indicated, output will be stdout')
+                          help = 'sample file. If not indicated, output will be stdout')
     rnParser.add_argument('-n', dest = 'nodeCount', required = False, 
                           help = 'node count of graph', 
                           type = int, default = 0)
@@ -77,10 +77,25 @@ if __name__ == '__main__':
                           help = 'sample count',
                           type = int)
     reParser.add_argument('-o', dest = 'output', required = False, 
-                          help = 'degree file. If not indicated, output will be stdout')
+                          help = 'sample file. If not indicated, output will be stdout')
     reParser.add_argument('-n', dest = 'edgeCount', required = False, 
                           help = 'edge count of graph', 
                           type = int, default = 0)
+
+    rwParser = subparsers.add_parser('randwalk', help = 'random walk sampling')
+    rwParser.add_argument('-i', dest = 'input', required = True,  
+                          help = 'graph file')
+    rwParser.add_argument('-c', dest = 'count', required = True,
+                          help = 'sample count',
+                          type = int)
+    rwParser.add_argument('-o', dest = 'output', required = False, 
+                          help = 'sample file. If not indicated, output will be stdout')
+    rwParser.add_argument('-n', dest = 'nodeCount', required = False, 
+                          help = 'node count of graph', 
+                          type = int, default = 0)
+    rwParser.add_argument('-j', dest = 'jp', required = False, 
+                          help = 'jump probability when walking', 
+                          type = float, default = 0.15)
 
     args = parser.parse_args()
 
@@ -120,5 +135,11 @@ if __name__ == '__main__':
 
         edges = sample.randomEdgeSample(args.input, args.edgeCount, args.count)
         sample.printEdges(edges, args.output)
+    elif args.action == 'randwalk':
+        if args.nodeCount == 0:
+            args.nodeCount = analysor.countNode(args.input)
+
+        steps = sample.randomWalkSample(args.input, args.nodeCount, args.jp, args.count)
+        sample.printSteps(steps, args.output)
     else:
         parser.print_help()

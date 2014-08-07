@@ -19,19 +19,13 @@ Edge *randomEdgeSample(const char *input, int edgeCount, int count);
 #define JUMP 1
 #define WALK 0
 
-typedef struct _forwardnode{
-	Array *nextNodes;
-} ForwardNode;
-
 typedef struct _forwardgraph{
-	ForwardNode **node;
-
+	Array **nodes;
     int nodeCount;
-    int edgeCount;
 } ForwardGraph;
 
 typedef struct _step{
-	int nodeId;
+	int index;
 	int tag;
 } Step;
 

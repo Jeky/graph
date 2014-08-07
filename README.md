@@ -4,7 +4,7 @@ This is a graph analyse toolkit which provides calculating pagerank, random samp
 
 This library is written by C, but it also has a python interface which is strongly recommend to be used.
 
-**PageRank Computer** is optimized by changing data structure into adjacency list and changing algorithm of power iteration, so it can compute large graph.
+**PageRank Calculator** is optimized by changing data structure into adjacency list and changing algorithm of power iteration, so it can compute large graph.
 
 
 
@@ -97,7 +97,7 @@ optional arguments:
 
 * **-i INPUT**         graph file
 
-* **-o OUTPUT**       degree file. If not indicated, output will be stdout
+* **-o OUTPUT**        degree file. If not indicated, output will be stdout
 
 * **-d {in,out,all}**  count which degree, in|out|all
 
@@ -117,7 +117,7 @@ optional arguments:
 
 * **-c COUNT**      sample count
 
-* **-o OUTPUT**     degree file. If not indicated, output will be stdout
+* **-o OUTPUT**     sample file. If not indicated, output will be stdout
 
 * **-n NODECOUNT**  node count of graph
 
@@ -133,10 +133,27 @@ optional arguments:
   
 * **-c COUNT**      sample count
   
-* **-o OUTPUT**     degree file. If not indicated, output will be stdout
+* **-o OUTPUT**     sample file. If not indicated, output will be stdout
   
 * **-n EDGECOUNT**  edge count of graph
 
+
+
+###randwalk
+
+usage: graphtool.py randwalk [-h] -i INPUT -c COUNT [-o OUTPUT] [-n NODECOUNT] [-j JP]
+
+optional arguments:
+
+* **-i INPUT**      graph file
+
+* **-c COUNT**      sample count
+
+* **-o OUTPUT**     sample file. If not indicated, output will be stdout
+
+* **-n NODECOUNT**  node count of graph
+
+* **-j JP**         jump probability when walking
 
 
 ##Update Log

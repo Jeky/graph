@@ -77,3 +77,34 @@ def printEdges(edges, outputFile):
         if not graph.quiet:
             print 'Finish Printing Edges.'
 
+
+# randomWalkSample() in sample.h
+
+class Step(Structure):
+    _fields_ = [('index', c_int),
+                ('tag', c_int)]
+
+graph.graphlib.randomWalkSample.argtypes = [c_char_p, c_int, c_double, c_int]
+graph.graphlib.randomWalkSample.restype = POINTER(Step)
+
+def randomWalkSample(inputFile, nodeCount, jp, count):
+    return graph.graphlib.randomWalkSample(inputFile, nodeCount, jp, count)[:count]
+
+def printSteps(steps, outputFile):
+    if outputFile:
+        fout = open(outputFile, 'w')
+    else:
+        fout = sys.stdout
+
+    for s in steps:
+        fout.write('%d\t%d\n' % (s.index, s.tag))
+
+    if outputFile:
+        if not graph.quiet:
+            print 'Finish Printing Steps. Output:', outputFile
+        fout.close()
+    else:
+        if not graph.quiet:
+            print 'Finish Printing Steps.'
+
+

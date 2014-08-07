@@ -51,6 +51,16 @@ int arrayGet(Array *array, int index){
 }
 
 
+double uniRand(){
+    return (double)rand() / RAND_MAX;
+}
+
+int randInt(int max){
+    double r =  uniRand() * max;
+    return (int)r;
+}
+
+
 void setOutput(BOOL isOutput){
     logFlag = isOutput;
 }

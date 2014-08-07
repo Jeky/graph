@@ -49,4 +49,9 @@ void setOutput(BOOL isOutput);
 
 void logMsg(char *format, ...);
 
+// random functions
+double uniRand();
+
+int randInt(int max);
+
 #endif
