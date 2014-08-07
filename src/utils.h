@@ -42,4 +42,11 @@ void arrayAdd(Array *array, int val);
 
 int arrayGet(Array *array, int index);
 
+// log functions
+static BOOL logFlag = TRUE;
+
+void setOutput(BOOL isOutput);
+
+void logMsg(char *format, ...);
+
 #endif

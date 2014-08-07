@@ -6,6 +6,10 @@ import os.path
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 
         '''This is a graph analyse toolkit which provides calculating pagerank, random sampling and other functions.''')
+    parser.add_argument('-q', dest = 'quiet', required = False, 
+                        help = 'quiet mode', 
+                        action = 'store_true', default = False)
+
     subparsers = parser.add_subparsers(dest = 'action', title = 'actions')
 
     compressParser = subparsers.add_parser('compress', help = 'compress input graph file')
@@ -79,6 +83,9 @@ if __name__ == '__main__':
                           type = int, default = 0)
 
     args = parser.parse_args()
+
+    if args.quiet:
+        graph.setOutput(False)
 
     if args.action == 'compress':
         compressor.compress(args.input, args.map, args.output)

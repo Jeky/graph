@@ -65,7 +65,7 @@ BackwardGraph *loadBackwardGraph(const char *filename, int nodeCount){
         nodeCount = countNode(filename);
     }
 
-    printf("Start Loading Graph From File: %s.\n", filename);
+    logMsg("Start Loading Graph From File: %s.\n", filename);
 
     graph = createBackwardGraph(nodeCount);
     for(i = 0; i < nodeCount; i++){
@@ -75,17 +75,17 @@ BackwardGraph *loadBackwardGraph(const char *filename, int nodeCount){
     loadGraphFile((void*)graph, filename, &backwardGraphLoader);
 
     // check dead ends
-    printf("Checking Deadends...\n");
+    logMsg("Checking Deadends...\n");
     for(i = 0; i < graph->nodeCount; i++){
         if(i % 100000 == 0 && i != 0){
-            printf("Checked %d nodes. Dead Ends Count: %d\n", i, graph->deadends->length);
+            logMsg("Checked %d nodes. Dead Ends Count: %d\n", i, graph->deadends->length);
         }
         if(graph->nodes[i]->outlinkCount == 0){
             arrayAdd(graph->deadends, i);
         }
     }
 
-    printf("Finish Loading Graph[V = %d, E = %d, D = %d]. Total Time: %0.2lf sec.\n", 
+    logMsg("Finish Loading Graph[V = %d, E = %d, D = %d]. Total Time: %0.2lf sec.\n", 
             graph->nodeCount, graph->edgeCount, graph->deadends->length, totalTime);
 
     return graph;
@@ -157,24 +157,24 @@ PRNode *computePageRank(BackwardGraph *graph, double jumpProb){
     NEW_ARRAY(rank, double, graph->nodeCount);
     NEW_ARRAY(pre, double, graph->nodeCount);
 
-    printf("Start Computing PageRank...\n");
+    logMsg("Start Computing PageRank...\n");
 
     for(i = 0; i < graph->nodeCount; i++){
         rank[i] = initValue;
     }
 
     while(!canFinish(pre, rank, graph->nodeCount) && iterCount < MAX_ITER_COUNT){
-        printf("Start Computing Power Iteration(%d)....", iterCount);
+        logMsg("Start Computing Power Iteration(%d)....", iterCount);
         begin = clock();
         powerIter(graph, pre, rank, jumpProb);
         end = clock();
-        printf("Finish. Total Time: %0.2lf sec.\n", (double)(end - begin) / CLOCKS_PER_SEC);
+        logMsg("Finish. Total Time: %0.2lf sec.\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
         iterCount ++;
     }
     free(pre);
 
-    printf("Finish Computing PageRank.\nStart Sorting Nodes by PageRank Value...");
+    logMsg("Finish Computing PageRank.\nStart Sorting Nodes by PageRank Value...");
     NEW_ARRAY(prnodes, PRNode, graph->nodeCount);
     for(i = 0; i < graph->nodeCount; i++){
         prnodes[i].index = i;
@@ -183,7 +183,7 @@ PRNode *computePageRank(BackwardGraph *graph, double jumpProb){
     free(rank);
 
     qsort(prnodes, graph->nodeCount, sizeof(PRNode), prComparator);
-    printf("Finish Sorting.\n");
+    logMsg("Finish Sorting.\n");
 
     return prnodes;
 }

@@ -16,6 +16,8 @@ This library is written by C, but it also has a python interface which is strong
 
 * **pagerank.h & pagerank.c** - pagerank calculator
 
+* **sample.h & sample.c** - sampling methods
+
 * **utils.h & utils.c** - utility tools (include some convenient macros)
 
 * **gat** - python interface

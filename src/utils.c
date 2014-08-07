@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include <stdarg.h>
 
 Array *createArrayWithCapacity(int capacity){
     Array *array;
@@ -48,4 +48,18 @@ int arrayGet(Array *array, int index){
     CHECK_CONDITION(index < array->length, "Index Out of Bound.");
 
     return array->values[index];
+}
+
+
+void setOutput(BOOL isOutput){
+    logFlag = isOutput;
+}
+
+void logMsg(char *format, ...){
+    va_list argptr;
+    va_start(argptr, format);
+    if(logFlag){
+        vfprintf(stdout, format, argptr);
+    }
+    va_end(argptr);
 }

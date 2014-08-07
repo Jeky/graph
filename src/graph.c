@@ -21,7 +21,7 @@ double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(vo
         }
 
         if(lineCounter % 1000000 == 0 && lineCounter != 0){
-            printf("read %d lines\n", lineCounter);
+            logMsg("read %d lines\n", lineCounter);
         }
         lineCounter += 1;
     }

@@ -1,10 +1,12 @@
 from sets import Set
 import sys
+import graph
 
 PRINT_LINE = 1000000
 
 def compress(inputFilename, mapFilename, outputFilename):
-    print 'Compressing', inputFilename
+    if not graph.quiet:
+        print 'Compressing', inputFilename
 
     nodeSet = Set()
     lineCount = 0
@@ -12,7 +14,8 @@ def compress(inputFilename, mapFilename, outputFilename):
     fin = open(inputFilename)
     for i, l in enumerate(fin.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
-            print 'read', i, 'lines'
+            if not graph.quiet:
+                print 'read', i, 'lines'
 
         fromId, toId = l.strip().split('\t')
         nodeSet.add(int(fromId))
@@ -20,19 +23,22 @@ def compress(inputFilename, mapFilename, outputFilename):
         lineCount += 1
 
     fin.close()
-    print 'Read %s lines. Node Count: %d' % (lineCount, len(nodeSet))
+    if not graph.quiet:
+        print 'Read %s lines. Node Count: %d' % (lineCount, len(nodeSet))
 
     fmap = open(mapFilename, 'w')
     nodeMap = {}
     for i, nid in enumerate(nodeSet):
         if i != 0 and i % PRINT_LINE == 0:
-            print 'write', i, 'nodes'
+            if not graph.quiet:
+                print 'write', i, 'nodes'
 
         fmap.write('%d\n' % nid)
         nodeMap[nid] = i
 
     fmap.close()
-    print 'Finish writing map file:', mapFilename
+    if not graph.quiet:
+        print 'Finish writing map file:', mapFilename
 
     fin = open(inputFilename)
     if outputFilename:
@@ -41,7 +47,8 @@ def compress(inputFilename, mapFilename, outputFilename):
         fout = sys.stdout
     for i, l in enumerate(fin.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
-            print 'write', i, 'lines'
+            if not graph.quiet:
+                print 'write', i, 'lines'
 
         fromId, toId = [int(nid) for nid in l.strip().split('\t')]
         fout.write('%d\t%d\n' % (nodeMap[fromId], nodeMap[toId]))
@@ -49,24 +56,29 @@ def compress(inputFilename, mapFilename, outputFilename):
     fin.close()
     if outputFilename:
         fout.close()
-        print 'Finish compressing graph file. Output:', outputFilename
+        if not graph.quiet:
+            print 'Finish compressing graph file. Output:', outputFilename
     else:
-        print 'Finish compressing graph file.'
+        if not graph.quiet:
+            print 'Finish compressing graph file.'
 
 
 def decompress(inputFilename, mapFilename, outputFilename, fileType):
-    print 'Decompressing', inputFilename, ', using mapfile:', mapFilename
+    if not graph.quiet:
+        print 'Decompressing', inputFilename, ', using mapfile:', mapFilename
 
     nodeList = []
     fmap = open(mapFilename)
     for i, l in enumerate(fmap.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
-            print 'read', i, 'lines'
+            if not graph.quiet:
+                print 'read', i, 'lines'
 
         nodeList.append(int(l))
 
     fmap.close()
-    print 'Finish reading map file:', mapFilename, 'Total node count:', len(nodeList)
+    if not graph.quiet:
+        print 'Finish reading map file:', mapFilename, 'Total node count:', len(nodeList)
 
     fin = open(inputFilename)
     if outputFilename:
@@ -76,7 +88,8 @@ def decompress(inputFilename, mapFilename, outputFilename, fileType):
 
     for i, l in enumerate(fin.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
-            print 'read', i, 'lines'
+            if not graph.quiet:
+                print 'read', i, 'lines'
 
         info = l.strip().split('\t')
         if fileType == 'graph':
@@ -90,6 +103,8 @@ def decompress(inputFilename, mapFilename, outputFilename, fileType):
     fin.close()
     if outputFilename:
         fout.close()
-        print 'Finish decompressing page rank file. Output: ', outputFilename
+        if not graph.quiet:
+            print 'Finish decompressing page rank file. Output: ', outputFilename
     else:
-        print 'Finish decompressing page rank file.'
+        if not graph.quiet:
+            print 'Finish decompressing page rank file.'

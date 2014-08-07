@@ -2,6 +2,8 @@ from ctypes import *
 import os.path
 import os
 
+quiet = False
+
 dirname, filename = os.path.split(os.path.abspath(__file__))
 GRAPH_LIBRARY_NAME = dirname[:dirname.rindex('/', 1, len(dirname) - 1)] + '/src/graphlib.so'
 
@@ -44,17 +46,30 @@ class PRNode(Structure):
 cdll.LoadLibrary(GRAPH_LIBRARY_NAME)
 graphlib = CDLL(GRAPH_LIBRARY_NAME)
 
+# export functions
+
+# loadBackwardGraph() in graph.h
 graphlib.loadBackwardGraph.argtypes = [c_char_p, c_int]
 graphlib.loadBackwardGraph.restype = POINTER(BackwardGraph)
 
-graphlib.destroyBackwardGraph.argtypes = [POINTER(BackwardGraph)]
-graphlib.destroyBackwardGraph.restype = None
-
-# export functions
 def loadBackwardGraph(filename, nodeCount = None):
     return graphlib.loadBackwardGraph(filename, nodeCount).contents
 
+# destroyBackwardGraph() in graph.h
+graphlib.destroyBackwardGraph.argtypes = [POINTER(BackwardGraph)]
+graphlib.destroyBackwardGraph.restype = None
 
 def destroyBackwardGraph(graph):
     graphlib.destroyBackwardGraph(pointer(graph))
+
+graphlib.setOutput.argtypes = [c_int]
+graphlib.setOutput.restype = None
+
+def setOutput(output):
+    global quiet
+    if output:
+        graphlib.setOutput(1)
+    else:
+        graphlib.setOutput(0)
+    quiet = not output
 

@@ -14,14 +14,14 @@ int *randomNodeSample(int nodeCount, int count){
 
 	NEW_ARRAY(sample, int, count);
 
-	printf("Starting Sampling Graph(V = %d), using Random Node Sampling Method...Sample Count: %d\n", nodeCount, count);
+	logMsg("Starting Sampling Graph(V = %d), using Random Node Sampling Method...Sample Count: %d\n", nodeCount, count);
 
 	for(i = 0; i < count; i++){
 		sample[i] = randInt(nodeCount);
 	}
 
     end = clock();
-	printf("Finish Sampling Graph. Total Time: %0.2lf\n", (double)(end - begin) / CLOCKS_PER_SEC);
+	logMsg("Finish Sampling Graph. Total Time: %0.2lf\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
 	return sample;
 }
@@ -45,7 +45,7 @@ Edge *randomEdgeSample(const char *input, int edgeCount, int count){
 	NEW_ARRAY(edges, Edge, edgeCount);
 	NEW_ARRAY(sample, Edge, count);
 
-	printf("Starting Sampling Graph(E = %d), using Random Edge Sampling Method...Sample Count: %d\n", edgeCount, count);
+	logMsg("Starting Sampling Graph(E = %d), using Random Edge Sampling Method...Sample Count: %d\n", edgeCount, count);
 
 	totalTime = loadGraphFile(edges, input, &edgeLoader);
 
@@ -56,7 +56,7 @@ Edge *randomEdgeSample(const char *input, int edgeCount, int count){
 	}
 
     end = clock();
-	printf("Finish Sampling Graph. Total Time: %0.2lf sec.\n", (double)(end - begin) / CLOCKS_PER_SEC);
+	logMsg("Finish Sampling Graph. Total Time: %0.2lf sec.\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
 	free(edges);
 
