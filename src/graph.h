@@ -3,42 +3,20 @@
 
 #include "utils.h"
 
-typedef struct _node{
-    int outlinkCount;
-    Array *preNodes;
-} Node;
+#define BUF_SIZE 100
 
-typedef struct _graph{
-    Node **nodes;
-    Array *deadends;
+typedef struct _forwardnode{
+	Array *nextNodes;
+} ForwardNode;
+
+typedef struct _forwardgraph{
+	ForwardNode **node;
 
     int capacity;
     int nodeCount;
     int edgeCount;
-} Graph;
+} ForwardGraph;
 
-
-/**
- * Node functions
- */
-Node *createNode();
-
-void destroyNode(Node *node);
-
-
-/**
- * Graph functions
- */
-Graph *createGraph();
-
-Graph *createGraphWithNodeCount(int nodeCount);
-
-void destroyGraph(Graph *graph);
-
-void addNode(Graph *graph, Node *node);
-
-Graph *loadGraph(const char *filename, int nodeCount);
-
-
+double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int));
 
 #endif

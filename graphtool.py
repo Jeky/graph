@@ -1,46 +1,81 @@
 from gat import compressor, analysor, graph
 import argparse
+import sys
+import os.path
     
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = '')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-compress', dest = 'compress_args', nargs = 3, 
-                        metavar = ('INPUT', 'MAP', 'OUTPUT'), 
-                        help = 'compress input graph file')
-    group.add_argument('-decompress', dest = 'decompress_args', nargs = 3, 
-                        metavar = ('INPUT', 'MAP', 'OUTPUT'), 
-                        help = 'decompress input graph file with map file')
-    group.add_argument('-pagerank', dest = 'pagerank_args', nargs = 4, 
-                        metavar = ('INPUT', 'NODE_COUNT', 'JUMP_PROB', 'OUTPUT'), 
-                        help = 'compute pagerank value of input graph')
-    group.add_argument('-degree', dest = 'degree_args', nargs = 3, 
-                        metavar = ('INPUT', 'NODE_COUNT', 'OUTPUT'), 
-                        help = 'count the degree of input graph')
+    parser = argparse.ArgumentParser(description = 
+        '''This is a graph analyse toolkit which provides calculating pagerank, random sampling and other functions.''')
+    subparsers = parser.add_subparsers(dest = 'action', title = 'actions')
+
+    compressParser = subparsers.add_parser('compress', help = 'compress input graph file')
+    compressParser.add_argument('-i', dest = 'input', required = True,  
+                                help = 'original graph file')
+    compressParser.add_argument('-m', dest = 'map', required = True,  
+                                help = 'output map file, which will be used when decompressing')
+    compressParser.add_argument('-o', dest = 'output', required = False, 
+                                help = 'compressed graph file. If not indicated, output will be stdout')
+
+    decompressParser = subparsers.add_parser('decompress', help = 'decompress input graph file with map file')
+    decompressParser.add_argument('-i', dest = 'input', required = True,  
+                                  help = 'compressed file')
+    decompressParser.add_argument('-m', dest = 'map', required = True,  
+                                  help = 'map file')
+    decompressParser.add_argument('-t', dest = 'type', required = False,  
+                                  help = 'file type',
+                                  default = 'graph', choices = ['graph', 'pagerank', 'degree'])
+    decompressParser.add_argument('-o', dest = 'output', required = False, 
+                                  help = 'decompressed file. If not indicated, output will be stdout')
+
+    pagerankParser = subparsers.add_parser('pagerank', help = 'compute pagerank value of input graph')
+    pagerankParser.add_argument('-i', dest = 'input', required = True,  
+                                help = 'compressed graph file')
+    pagerankParser.add_argument('-o', dest = 'output', required = False, 
+                                help = 'pagerank file. If not indicated, output will be stdout')
+    pagerankParser.add_argument('-j', dest = 'jp', required = False, 
+                                help = 'jump probability when computing pagerank', 
+                                type = float, default = 0.15)
+    pagerankParser.add_argument('-n', dest = 'nodeCount', required = False, 
+                                help = 'node count of graph', 
+                                type = int, default = 0)
+
+    degreeParser = subparsers.add_parser('degree', help = 'count the degree of input graph')
+    degreeParser.add_argument('-i', dest = 'input', required = True,  
+                              help = 'graph file')
+    degreeParser.add_argument('-o', dest = 'output', required = False, 
+                              help = 'degree file. If not indicated, output will be stdout')
+    degreeParser.add_argument('-d', dest = 'direct', required = False, 
+                              help = 'count which degree, in|out|all', 
+                              choices = ['in', 'out', 'all'], default = 'all')
+    degreeParser.add_argument('-s', dest = 'sort', required = False,
+                              help = 'sort by which one, in|out|id',
+                              choices = ['in', 'out', 'id'], default = 'id')
+    degreeParser.add_argument('-n', dest = 'nodeCount', required = False, 
+                              help = 'node count of graph', 
+                              type = int, default = 0)
 
     args = parser.parse_args()
 
-    if args.compress_args:
-        compressor.compress(args.compress_args[0], 
-                            args.compress_args[1], 
-                            args.compress_args[2])
+    if args.action == 'compress':
+        compressor.compress(args.input, args.map, args.output)
 
-    elif args.decompress_args:
-        compressor.decompress(args.decompress_args[0], 
-                              args.decompress_args[1], 
-                              args.decompress_args[2])
+    elif args.action == 'decompress':
+        compressor.decompress(args.input, args.map, args.output, args.type)
 
-    elif args.pagerank_args:
-        g = graph.loadGraph(args.pagerank_args[0], int(args.pagerank_args[1]))
-        prnodes = analysor.computePageRank(g, float(args.pagerank_args[2]))
-        analysor.printPageRank(prnodes, args.pagerank_args[3])
-        graph.destroyGraph(g)
+    elif args.action == 'pagerank':
+        if args.nodeCount == 0:
+            args.nodeCount = analysor.countNode(args.input)
 
-    elif args.degree_args:
-        g = graph.loadGraph(args.degree_args[0], int(args.degree_args[1]))
-        nodes = analysor.countDegree(g)
-        analysor.sortDeg(nodes, analysor.SORT_BY_IN)
-        analysor.printDeg(nodes, args.degree_args[2])
-        graph.destroyGraph(g)
+        g = graph.loadBackwardGraph(args.input, args.nodeCount)
+        prnodes = analysor.computePageRank(g, args.jp)
+        analysor.printPageRank(prnodes, args.output)
+        graph.destroyBackwardGraph(g)
 
+    elif args.action == 'degree':
+        if args.nodeCount == 0:
+            args.nodeCount = analysor.countNode(args.input)
+
+        degnodes = analysor.countDegree(args.input, args.nodeCount, args.sort)
+        analysor.printDegree(degnodes, args.output, args.direct)
     else:
         parser.print_help()

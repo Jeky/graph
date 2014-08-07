@@ -8,13 +8,11 @@ This library is written by C, but it also has a python interface which is strong
 
 ##File description
 
-* **graph.h & graph.c** - graph data structure
+* **graph.h & graph.c** - graph data structure and basic graph load functions
 
-* **analyse.h & analyse.c** - graph analyse tools which includes
+* **counter.h & counter.c** - node counter and degree counter
 
-	* PageRank Computer
-
-	* Degree Counter
+* **pagerank.h & pagerank.c** - pagerank calculator
 
 * **utils.h & utils.c** - utility tools (include some convenient macros)
 
@@ -24,19 +22,75 @@ This library is written by C, but it also has a python interface which is strong
 
 ##Usage
 
-* usage: graphtool.py 
+usage: graphtool.py [-h] {compress,decompress,pagerank,degree}
 
-	* **[-h]** - show this help message and exit
+###compress
 
-    * **[-compress INPUT MAP OUTPUT]** - compress input graph file
+compress input graph file
 
-    * **[-decompress INPUT MAP OUTPUT]** - decompress input graph file with map file
+usage: graphtool.py compress [-h] -i INPUT -m MAP [-o OUTPUT]
 
-    * **[-pagerank INPUT NODE_COUNT JUMP_PROB OUTPUT]** - compute pagerank value of input graph
+optional arguments:
 
-    * **[-degree INPUT NODE_COUNT OUTPUT]** - count the degree of input graph
+* **-i INPUT**    original graph file
+
+* **-m MAP**      output map file, which will be used when decompressing
+
+* **-o OUTPUT**   compressed graph file. If not indicated, output will be stdout
+
+###decompress
+
+decompress input graph file with map file
+
+usage: graphtool.py decompress [-h] -i INPUT -m MAP [-t {graph,pagerank,degree}] [-o OUTPUT]
+
+optional arguments:
+
+* **-i INPUT**              compressed file
+
+* **-m MAP**                map file
+
+* **-t {graph,pagerank,degree}** file type
+
+* **-o OUTPUT**             decompressed file. If not indicated, output will be stdout
+
+###pagerank
+
+compute pagerank value of input graph
+
+usage: graphtool.py pagerank [-h] -i INPUT [-o OUTPUT] [-j JP] [-n NODECOUNT]
+
+optional arguments:
+
+* **-i INPUT**      compressed graph file
+
+* **-o OUTPUT**     pagerank file. If not indicated, output will be stdout
+
+* **-j JP**         jump probability when computing pagerank
+
+* **-n NODECOUNT**  node count of graph
+
+###degree
+
+count the degree of input graph
+
+usage: graphtool.py degree [-h] -i INPUT [-o OUTPUT] [-d {in,out,all}] [-s {in,out,id}] [-n NODECOUNT]
+
+optional arguments:
+
+* **-i INPUT**         graph file
+
+* **-o OUTPUT**       degree file. If not indicated, output will be stdout
+
+* **-d {in,out,all}**  count which degree, in|out|all
+
+* **-s {in,out,id}**   sort by which one, in|out|id
+
+* **-n NODECOUNT**     node count of graph
 
 ##Update Log
+
+* **Aug 7. ** Add new CLI, fix bugs and refactor structure of files
 
 * **Jul 31.** Update usage, add degree counter and command line interface
 

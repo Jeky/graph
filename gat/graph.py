@@ -16,12 +16,12 @@ class Array(Structure):
                 ('values', POINTER(c_int)),
                 ('capacity', c_int)]
 
-class Node(Structure):
+class BackwardNode(Structure):
     _fields_ = [('outlinkCount', c_int),
                 ('preNodes', POINTER(Array))]
 
-class Graph(Structure):
-    _fields_ = [('nodes', POINTER(POINTER(Node))),
+class BackwardGraph(Structure):
+    _fields_ = [('nodes', POINTER(POINTER(BackwardNode))),
                 ('deadends', POINTER(Array)),
                 ('capacity', c_int),
                 ('nodeCount', c_int),
@@ -44,18 +44,17 @@ class PRNode(Structure):
 cdll.LoadLibrary(GRAPH_LIBRARY_NAME)
 graphlib = CDLL(GRAPH_LIBRARY_NAME)
 
-graphlib.loadGraph.argtypes = [c_char_p, c_int]
-graphlib.loadGraph.restype = POINTER(Graph)
+graphlib.loadBackwardGraph.argtypes = [c_char_p, c_int]
+graphlib.loadBackwardGraph.restype = POINTER(BackwardGraph)
 
-graphlib.destroyGraph.argtypes = [POINTER(Graph)]
-graphlib.destroyGraph.restype = None
+graphlib.destroyBackwardGraph.argtypes = [POINTER(BackwardGraph)]
+graphlib.destroyBackwardGraph.restype = None
 
 # export functions
-def loadGraph(filename, nodeCount = None):
-    if nodeCount:
-        return graphlib.loadGraph(filename, nodeCount).contents
+def loadBackwardGraph(filename, nodeCount = None):
+    return graphlib.loadBackwardGraph(filename, nodeCount).contents
 
 
-def destroyGraph(graph):
-    graphlib.destroyGraph(pointer(graph))
+def destroyBackwardGraph(graph):
+    graphlib.destroyBackwardGraph(pointer(graph))
 

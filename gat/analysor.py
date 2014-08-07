@@ -1,64 +1,80 @@
 from ctypes import *
 import os.path
 import os
+import sys
 
 from graph import *
 
 PRINT_LINE = 1000000
 
-graphlib.computePageRank.argtypes = [POINTER(Graph), c_double]
+# export functions
+
+# computePageRank in pagerank.h
+graphlib.computePageRank.argtypes = [POINTER(BackwardGraph), c_double]
 graphlib.computePageRank.restype = POINTER(PRNode)
 
-# export functions
-def computePageRank(graph, jumpProb = 0.2):
+def computePageRank(graph, jumpProb):
     prnodePtr = graphlib.computePageRank(pointer(graph), jumpProb)
-    prnodes = []
-    for i in range(graph.nodeCount):
-        prnodes.append(PRNode(prnodePtr[i].index, prnodePtr[i].pr))
-
-    return prnodes
+    return prnodePtr[:graph.nodeCount]
 
 
 def printPageRank(prnodes, outputFile):
-    output = open(outputFile, 'w')
+    if outputFile:
+        output = open(outputFile, 'w')
+    else:
+        output = sys.stdout
 
     for prn in prnodes:
         output.write('%d\t%0.10f\n' % (prn.index, prn.pr))
 
-    output.close()
+    if outputFile:
+        output.close()
+
+# countNode() in counter.h
+graphlib.countNode.argtypes = [c_char_p]
+graphlib.countNode.restype = c_int
+
+def countNode(input):
+    return graphlib.countNode(input)
 
 
-def countDegree(graph):
-    print 'Start Counting Degree in Graph...'
-    nodes = []
+# countDegree() in counter.h
+class DegNode(Structure):
+    _fields_ = [('index', c_int),
+                ('inDeg', c_int),
+                ('outDeg', c_int)]
 
-    for i in range(graph.nodeCount):
-        if i % PRINT_LINE == 0 and i != 0:
-            print 'count', i, 'nodes'
+    def __str__(self):
+        return 'Node[in = %d, out = %d]' % \
+               (self.inDeg, self.outDeg)
 
-        nodes.append({'index': i, 
-                      'in'   : graph.nodes[i].contents.preNodes.contents.length,
-                      'out'  : graph.nodes[i].contents.outlinkCount})
+graphlib.countDegree.argtypes = [c_char_p, c_int, c_int]
+graphlib.countDegree.restype = POINTER(DegNode)
 
-    print 'Finish Counting Degree'
+def countDegree(input, nodeCount, sortBy):
+    sort = 0
+    if sortBy == 'in':
+        sort = 1
+    elif sortBy == 'out':
+        sort = 2
 
-    return nodes
-
-SORT_BY_IN  = lambda x: -x['in']
-SORT_BY_IN.__name__ = 'SORT BY INDEGREE'
-SORT_BY_OUT = lambda x: -x['out']
-SORT_BY_OUT.__name__ = 'SORT BY OUTDEGREE'
-
-def sortDeg(nodes, comparator):
-    print 'Sorting Degree Count, Using Comparator:', comparator.__name__
-    nodes.sort(key = comparator)
+    return graphlib.countDegree(input, nodeCount, sort)[:nodeCount]
 
 
-def printDeg(degNodes, outputFile):
-    print 'Writing Degree Counting to File:', outputFile
-    output = open(outputFile, 'w')
+def printDegree(nodes, outputFile, degFilter):
+    if outputFile:
+        output = open(outputFile, 'w')
+    else:
+        output = sys.stdout
 
-    for degn in degNodes:
-        output.write('%d\t%d\t%d\n' % (degn['index'], degn['in'], degn['out']))
+    for dn in nodes:
+        if degFilter == 'in':
+            output.write('%d\t%d\n' % (dn.index, dn.inDeg))
+        elif degFilter == 'out':
+            output.write('%d\t%d\n' % (dn.index, dn.outDeg))
+        else:
+            output.write('%d\t%d\t%d\n' % (dn.index, dn.inDeg, dn.outDeg))
 
-    output.close()
+
+    if outputFile:
+        output.close()

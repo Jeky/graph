@@ -1,4 +1,5 @@
 from sets import Set
+import sys
 
 PRINT_LINE = 1000000
 
@@ -34,7 +35,10 @@ def compress(inputFilename, mapFilename, outputFilename):
     print 'Finish writing map file:', mapFilename
 
     fin = open(inputFilename)
-    fout = open(outputFilename, 'w')
+    if outputFilename:
+        fout = open(outputFilename, 'w')
+    else:
+        fout = sys.stdout
     for i, l in enumerate(fin.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
             print 'write', i, 'lines'
@@ -43,12 +47,14 @@ def compress(inputFilename, mapFilename, outputFilename):
         fout.write('%d\t%d\n' % (nodeMap[fromId], nodeMap[toId]))
 
     fin.close()
-    fout.close()
+    if outputFilename:
+        fout.close()
+        print 'Finish compressing graph file. Output:', outputFilename
+    else:
+        print 'Finish compressing graph file.'
 
-    print 'Finish compressing graph file. Output:', outputFilename
 
-
-def decompress(inputFilename, mapFilename, outputFilename):
+def decompress(inputFilename, mapFilename, outputFilename, fileType):
     print 'Decompressing', inputFilename, ', using mapfile:', mapFilename
 
     nodeList = []
@@ -63,16 +69,27 @@ def decompress(inputFilename, mapFilename, outputFilename):
     print 'Finish reading map file:', mapFilename, 'Total node count:', len(nodeList)
 
     fin = open(inputFilename)
-    fout = open(outputFilename, 'w')
+    if outputFilename:
+        fout = open(outputFilename, 'w')
+    else:
+        fout = sys.stdout
 
     for i, l in enumerate(fin.xreadlines()):
         if i != 0 and i % PRINT_LINE == 0:
             print 'read', i, 'lines'
 
         info = l.strip().split('\t')
-        nodeIndex = int(info[0])
-        fout.write('%d\t%s\n' % (nodeList[nodeIndex], '\t'.join(info[1:])))
+        if fileType == 'graph':
+            fromIndex = int(info[0])
+            toIndex = int(info[1])
+            fout.write('%d\t%d\n' % (nodeList[fromIndex], nodeList[toIndex]))
+        else:
+            nodeIndex = int(info[0])
+            fout.write('%d\t%s\n' % (nodeList[nodeIndex], '\t'.join(info[1:])))
 
     fin.close()
-    fout.close()
-    print 'Finish decompressing page rank file. Output: ', outputFilename
+    if outputFilename:
+        fout.close()
+        print 'Finish decompressing page rank file. Output: ', outputFilename
+    else:
+        print 'Finish decompressing page rank file.'

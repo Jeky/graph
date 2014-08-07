@@ -1,5 +1,95 @@
-#include "analyse.h"
+#include "pagerank.h"
 #include <math.h>
+
+BackwardNode *createBackwardNode(){
+    BackwardNode *node;
+    NEW(node, BackwardNode);
+
+    node->outlinkCount = 0;
+    node->preNodes = createArray();
+
+    return node;
+}
+
+void destroyBackwardNode(BackwardNode *node){
+    destroyArray(node->preNodes);
+    free(node);
+}
+
+BackwardGraph *createBackwardGraph(int nodeCount){
+    BackwardGraph *graph;
+    NEW(graph, BackwardGraph);
+
+    NEW_ARRAY(graph->nodes, BackwardNode*, nodeCount);
+    graph->deadends = createArray();
+    graph->nodeCount = 0;
+    graph->edgeCount = 0;
+    graph->capacity = nodeCount;
+
+    return graph;
+}
+
+void destroyBackwardGraph(BackwardGraph *graph){
+    int i = 0;
+
+    destroyArray(graph->deadends);
+    
+    for(i = 0; i < graph->nodeCount; i++){
+        destroyBackwardNode(graph->nodes[i]);
+    }
+    free(graph->nodes);
+
+    free(graph);
+}
+
+
+BOOL backwardGraphLoader(void *g, int fromId, int toId){
+    BackwardGraph* graph = (BackwardGraph*)g;
+
+    CHECK_CONDITION(graph->nodes[toId] && graph->nodes[fromId], "Init Graph Error!");
+
+    arrayAdd(graph->nodes[toId]->preNodes, fromId);
+    graph->nodes[fromId]->outlinkCount++;
+    graph->edgeCount ++;
+
+    return TRUE;
+}
+
+
+BackwardGraph *loadBackwardGraph(const char *filename, int nodeCount){
+    BackwardGraph *graph;
+    double totalTime = 0;
+    int i;
+
+    if(nodeCount == 0){
+        nodeCount = countNode(filename);
+    }
+
+    printf("Start Loading Graph From File: %s.\n", filename);
+
+    graph = createBackwardGraph(nodeCount);
+    for(i = 0; i < nodeCount; i++){
+        graph->nodes[graph->nodeCount++] = createBackwardNode();
+    }
+
+    loadGraphFile((void*)graph, filename, &backwardGraphLoader);
+
+    // check dead ends
+    printf("Checking Deadends...\n");
+    for(i = 0; i < graph->nodeCount; i++){
+        if(i % 100000 == 0 && i != 0){
+            printf("Checked %d nodes. Dead Ends Count: %d\n", i, graph->deadends->length);
+        }
+        if(graph->nodes[i]->outlinkCount == 0){
+            arrayAdd(graph->deadends, i);
+        }
+    }
+
+    printf("Finish Loading Graph[V = %d, E = %d, D = %d]. Total Time: %0.2lf sec.\n", 
+            graph->nodeCount, graph->edgeCount, graph->deadends->length, totalTime);
+
+    return graph;
+}
 
 BOOL canFinish(double *pre, double *rank, int length){
     int i;
@@ -11,7 +101,7 @@ BOOL canFinish(double *pre, double *rank, int length){
     return TRUE;
 }
 
-void powerIter(Graph *graph, double *pre, double *rank, double jumpProb){
+void powerIter(BackwardGraph *graph, double *pre, double *rank, double jumpProb){
     int i, j, index;
     double randomJumpValue = 0.0;
     double deadEndValue = 0.0;
@@ -54,7 +144,7 @@ int prComparator(const void *a, const void *b){
     }
 }
 
-PRNode *computePageRank(Graph *graph, double jumpProb){
+PRNode *computePageRank(BackwardGraph *graph, double jumpProb){
     double *rank;
     double *pre;
     PRNode *prnodes;
