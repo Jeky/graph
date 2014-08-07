@@ -28,8 +28,11 @@ This library is written by C, but it also has a python interface which is strong
 
 ##Usage
 
-usage: graphtool.py [-h] {compress,decompress,pagerank,degree}
+usage: graphtool.py [-h] [-q] {compress,decompress,pagerank,degree}
 
+optional arguments:
+
+*  **-q**                    quiet mode
 
 
 ###compress
