@@ -28,6 +28,20 @@ This library is written by C, but it also has a python interface which is strong
 
 ##Usage
 
+###Compile C Library
+
+First thing is to compile all the c codes. Modify src/Makefile to satisfy your environment. And then:
+
+```shell
+$ cd src
+$ make
+```
+
+This will compile all the codes into **graphlib.so**. Then you can either use this c library or use python interface.
+
+
+###How to use CLI
+
 usage: graphtool.py [-h] [-q] {compress,decompress,pagerank,degree}
 
 optional arguments:
@@ -158,7 +172,7 @@ optional arguments:
 
 ##Update Log
 
-* **Aug 7.**  Add random node, random edge sampling methods.
+* **Aug 7.**  Add random node, random edge and random walk sampling methods.
 
 * **Aug 7.**  Add new CLI, fix bugs and refactor structure of files
 
