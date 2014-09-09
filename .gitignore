@@ -3,3 +3,5 @@ test/*
 *.o
 *.pyc
 *.so
+
+src/rw

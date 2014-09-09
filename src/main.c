@@ -66,13 +66,16 @@ int main(){
     char buffer[100];
 
     for(i = 1; i <= 20; i++){
-        sprintf(buffer, "/Volumes/Time Machine/jeky/twitter/rw/%d", i);
-        fp = fopen(buffer, "w");
         for(j = 0; j < 1000; j++){
+            sprintf(buffer, "/Volumes/Time Machine/jeky/twitter/rw/%d/rw-%d.list", i, j);
+            fp = fopen(buffer, "w+");
+
+            CHECK_CONDITION(fp != NULL, "Cannot open file");
+
             printf("Sampling...JP = %0.2f, COUNT = %d\n", i * 0.01, j);
             longRandomWalkSample(graph, i * 0.01, COUNT, fp);
+            fclose(fp);
         }
-        fclose(fp);
     }
 
     destroyForwardGraph(graph);
