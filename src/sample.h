@@ -31,4 +31,6 @@ typedef struct _step{
 
 Step *randomWalkSample(char *input, int nodeCount, double jp, int count);
 
+BOOL forwardGraphLoader(void *graph, int lineIndex, int fromId, int toId);
+
 #endif
