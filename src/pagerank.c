@@ -94,7 +94,7 @@ BackwardGraph *loadBackwardGraph(const char *filename, int nodeCount){
 BOOL canFinish(double *pre, double *rank, int length){
     int i;
     for(i = 0; i < length; i++){
-        if(fabs(pre[i] - rank[i]) > fmin(1.0 / length / 2, LIMITATION)){
+        if(fabs(pre[i] - rank[i]) > fmin(1.0 / length / 100, LIMITATION)){
             return FALSE;
         }
     }

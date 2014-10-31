@@ -25,7 +25,7 @@ def printPageRank(prnodes, outputFile):
         output = sys.stdout
 
     for prn in prnodes:
-        output.write('%d\t%0.10f\n' % (prn.index, prn.pr))
+        output.write('%d\t%0.20E\n' % (prn.index, prn.pr))
 
     if outputFile:
         output.close()
