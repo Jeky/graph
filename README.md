@@ -39,6 +39,13 @@ $ make
 
 This will compile all the codes into **graphlib.so**. Then you can either use this c library or use python interface.
 
+###Input Data Format
+
+* Each line in input graph file is: FROM_NODE_ID \t TO_NODE_ID
+
+* Output file from degree component is: ID \t IN_DEGREE \t OUT_DEGREE
+
+* Output file from pagerank component is: ID \t PAGERANK_VALUE
 
 ###How to use CLI
 

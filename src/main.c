@@ -23,8 +23,6 @@ int main(){
     Graph *g = createGraph();
     loadGraph(g, "/Users/jeky/Desktop/test.graph");
 
-    printGraph(g);
-
     destroyGraph(g);
 
     return 0;
