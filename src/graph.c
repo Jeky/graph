@@ -118,11 +118,16 @@ Node *nodeArrayGet(NodeArray *array, int index){
 
 Graph *createGraphWithNodeCount(int nodeCount){
     Graph *g;
+    int i;
     NEW(g, Graph);
 
     g->nodes = createNodeArrayWithCapacity(nodeCount);
     g->deadends = createArray();
     g->edgeCount = 0;
+
+    for(i = 0; i < nodeCount; i++){
+        nodeArrayAdd(g->nodes, createNode());
+    }
 
     return g;
 }
