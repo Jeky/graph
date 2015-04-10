@@ -62,7 +62,7 @@ DegNode *countDegree(const char *filename, int nodeCount, int sortBy){
             logMsg("Sort Degree by Outdegree...\n");
             qsort(nodes, nodeCount, sizeof(DegNode), outdegreeComparator);
             break;
-    }   
+    }
 
     return nodes;
 }

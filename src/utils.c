@@ -12,7 +12,6 @@ Array *createArrayWithCapacity(int capacity){
     return array;
 }
 
-
 Array *createArray(){
     return createArrayWithCapacity(DEFAULT_ARRAY_SIZE);
 }
