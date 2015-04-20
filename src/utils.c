@@ -23,14 +23,12 @@ void destroyArray(Array *array){
 
 void encapsulateArray(Array *array){
     int *tmp = array->values;
-    int i = 0;
+    int originalLen = array->capacity;
 
-    array->capacity += DEFAULT_ARRAY_SIZE;
+    array->capacity *= 2;
     NEW_ARRAY(array->values, int, array->capacity);
-
-    for(i = 0; i < array->length; i++){
-        array->values[i] = tmp[i];
-    }
+    
+    memcpy(array->values, tmp, sizeof(int) * originalLen);
 
     free(tmp);
 }

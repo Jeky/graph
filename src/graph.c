@@ -37,8 +37,8 @@ Node *createNode(){
     Node *n;
     NEW(n, Node);
 
-    NEW(n->prevNodes, Array);
-    NEW(n->nextNodes, Array);
+    n->prevNodes = createArray();
+    n->nextNodes = createArray();
 
     return n;
 }
@@ -83,19 +83,14 @@ void destroyNodeArray(NodeArray *array){
 
 void encapsulateNodeArray(NodeArray *array){
     Node **tmp = array->values;
-    int i = 0;
     int originalLen = array->length;
 
     array->capacity *= 2;
     NEW_ARRAY(array->values, Node*, array->capacity);
 
-    for(i = 0; i < array->length; i++){
-        array->values[i] = tmp[i];
-    }
+    printf("encapsulateNodeArray from %d to %d\n", originalLen, array->capacity);
 
-    for(i = 0; i < originalLen; i++){
-        destroyNode(tmp[i]);
-    }
+    memcpy(array->values, tmp, sizeof(Node*) * originalLen);
     free(tmp);
 }
 
