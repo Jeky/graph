@@ -50,7 +50,7 @@ BOOL backwardGraphLoader(void *g, int lineIndex, int fromId, int toId){
 
     arrayAdd(graph->nodes[toId]->preNodes, fromId);
     graph->nodes[fromId]->outlinkCount++;
-    graph->edgeCount ++;
+    graph->edgeCount++;
 
     return TRUE;
 }

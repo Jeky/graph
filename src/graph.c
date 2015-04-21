@@ -2,7 +2,7 @@
 
 double loadGraphFile(void *graph, const char *filename, BOOL (*lineHandleFun)(void*,int,int,int)){
     int fromId, toId, lineCounter = 0, count;
-    clock_t begin, end;
+    clock_t begin, end, b, e;
     FILE *fp;
 
     begin = clock();
@@ -88,8 +88,6 @@ void encapsulateNodeArray(NodeArray *array){
     array->capacity *= 2;
     NEW_ARRAY(array->values, Node*, array->capacity);
 
-    printf("encapsulateNodeArray from %d to %d\n", originalLen, array->capacity);
-
     memcpy(array->values, tmp, sizeof(Node*) * originalLen);
     free(tmp);
 }
@@ -143,6 +141,7 @@ void destroyGraph(Graph *g){
 
 BOOL GraphLoader(void *graph, int lineIndex, int fromId, int toId){
     Graph *g = (Graph*)graph;
+
     while(fromId >= g->nodes->length){
         nodeArrayAdd(g->nodes, createNode());
     }
